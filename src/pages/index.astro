@@ -6,6 +6,7 @@ import '../styles/global.css';
 
 const posts = await fetchPosts();
 const base = import.meta.env.BASE_URL || "/";
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 ---
 
@@ -20,7 +21,7 @@ const base = import.meta.env.BASE_URL || "/";
   <link href={`${base}/180.png`} rel="apple-touch-icon">
   <title>Live Cricket Score 🏏</title>
   <meta name="description" content="🏏 Latest live cricket score and match updates 🥎.">
-  <link rel="canonical" href={`${base}`} />
+  <link rel="canonical" href={canonicalURL} />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">

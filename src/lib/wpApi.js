@@ -12,7 +12,7 @@ export async function fetchPosts(matchId = "114996") {
     if (!data?.title) return [];
 
     const noMatchDetails =
-      data.livescore === "Data Not Found" && data.batterone === "Data Not Found";
+      data.livescore === "Data Not Found" || data.batterone === "Match Stats will Update Soon";
 
     if (noMatchDetails) {
       return [
@@ -37,15 +37,15 @@ export async function fetchPosts(matchId = "114996") {
     return [
       {
         id: "1",
-        title: data.title || "Match Info Unavailable",
+        title: data.title.replace("- Live Cricket Score", "") || "Match Info Unavailable",
         content: `
-          ${data.update || "No updates available."}<br><br>
-          🔴 Score: ${data.livescore || "N/A"} <br><br>
+          🏆 ${data.update || "No updates available."}<br><br>
+          🔴 ${data.livescore || "N/A"} <br><br>
           📊 ${data.runrate || "N/A"}<br><br>
           🏏 Batsmen:<br>
-              ${formatBatsman(data.batterone, data.batsmanonerun, data.batsmanoneball, data.batsmanonesr)}<br><br>
+              ➡ ${formatBatsman(data.batterone, data.batsmanonerun, data.batsmanoneball, data.batsmanonesr)}<br><br>
           🥎 Bowler:<br>
-              ${formatBowler(data.bowlerone, data.bowleroneover, data.bowleronerun, data.bowleronewickers, data.bowleroneeconomy)}<br><br>
+              ➡ ${formatBowler(data.bowlerone, data.bowleroneover, data.bowleronerun, data.bowleronewickers, data.bowleroneeconomy)}<br><br>
         `,
       },
     ];
