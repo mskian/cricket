@@ -1,0 +1,54 @@
+---
+
+import { fetchPosts } from '../lib/wpApi.js';
+import { astroVersion, lastBuildTime } from '../lib/buildInfo.js';
+import '../styles/global.css';
+
+const posts = await fetchPosts();
+const base = import.meta.env.BASE_URL || "/";
+
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href={`${base}/favicon.ico`} type="image/x-icon">
+  <link href={`${base}/192.png`} rel="icon" sizes="192x192" type="image/png">
+  <link href={`${base}/180.png`} rel="apple-touch-icon">
+  <title>Live Cricket Score 🏏</title>
+  <meta name="description" content="🏏 Latest live cricket score and match updates 🥎.">
+  <link rel="canonical" href={`${base}`} />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <section class="section">
+    <div class="container">
+      {posts.length > 0 ? (
+        posts.map((post) => (
+          <div class="card blog-card" data-id={post.id}>
+            <div class="card-content">
+              <h2 class="title is-5 has-text-dark mt-5">{post.title}</h2>
+              <div class="content post-content">
+                <p set:html={post.content}></p>
+                <br />
+                <p class="is-size-6 mb-5">⚡ Built with Astro: {astroVersion}<br />✏ updated at: {lastBuildTime}</p>
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div class="notification is-danger has-text-centered">
+          No match data available.
+        </div>
+      )}
+    </div>
+  </section>
+
+</body>
+</html>
