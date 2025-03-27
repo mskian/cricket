@@ -57,3 +57,8 @@ body {
   color: #2e2c2c;
   line-height: 1.6;
 }
+.notification {
+  font-family: "Rubik", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+}
