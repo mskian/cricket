@@ -18,7 +18,7 @@ export async function fetchPosts(matchId = "115005") {
       return [
         {
           id: matchId,
-          title: data.title.replace("- Live Cricket Score ", "") || "Match Info Unavailable",
+          title: data.title.replace("- Live Cricket Score", "").trim() || "Match Info Unavailable",
           content: `🏆 ${data.update || "Match status unavailable."}`,
         },
       ];
@@ -37,7 +37,7 @@ export async function fetchPosts(matchId = "115005") {
     return [
       {
         id: matchId,
-        title: data.title.replace("- Live Cricket Score ", "") || "Match Info Unavailable",
+        title: data.title.replace("- Live Cricket Score", "").trim() || "Match Info Unavailable",
         content: `
           🏆 ${data.update || "No updates available."}<br><br>
           🔴 ${data.livescore || "N/A"} <br><br>
