@@ -1,4 +1,4 @@
-export async function fetchPosts(matchId = "114996") {
+export async function fetchPosts(matchId = "115005") {
 
   try {
   
@@ -17,9 +17,9 @@ export async function fetchPosts(matchId = "114996") {
     if (noMatchDetails) {
       return [
         {
-          id: "1",
-          title: data.title || "Match Info Unavailable",
-          content: `${data.update || "Match status unavailable."}`,
+          id: matchId,
+          title: data.title.replace("- Live Cricket Score ", "") || "Match Info Unavailable",
+          content: `🏆 ${data.update || "Match status unavailable."}`,
         },
       ];
     }
@@ -36,8 +36,8 @@ export async function fetchPosts(matchId = "114996") {
 
     return [
       {
-        id: "1",
-        title: data.title.replace("- Live Cricket Score", "") || "Match Info Unavailable",
+        id: matchId,
+        title: data.title.replace("- Live Cricket Score ", "") || "Match Info Unavailable",
         content: `
           🏆 ${data.update || "No updates available."}<br><br>
           🔴 ${data.livescore || "N/A"} <br><br>
