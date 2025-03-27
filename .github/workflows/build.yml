@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      MATCH_URL: ${{ secrets.MATCH_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare
