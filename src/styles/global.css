@@ -7,7 +7,6 @@ html, body {
 	overflow-x: hidden;
 	font-family: "Rubik", sans-serif;
 }
-
 body {
   background: #f5ebb4;
   padding-bottom: 20px;
@@ -18,7 +17,6 @@ body {
   font-family: "Rubik", sans-serif;
   font-weight: 600;
 }
-
 .card {
   border-radius: 15px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -26,12 +24,10 @@ body {
   font-family: "Rubik", sans-serif;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .card:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
-
 .button {
   font-family: "Rubik", sans-serif;
   border: none;
@@ -41,19 +37,21 @@ body {
   color: white;
   transition: background-color 0.3s ease;
 }
-
 .button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
-.title, .subtitle {
+.title {
   font-family: "Rubik", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
 }
-
+p {
+  font-family: "Rubik", sans-serif;
+  font-weight: 500;
+}
 .post-content {
   font-family: "Rubik", sans-serif;
-  font-size: 1em;
   color: #2e2c2c;
   line-height: 1.6;
 }

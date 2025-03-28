@@ -45,7 +45,7 @@ export async function fetchPosts(matchId = "115012") {
           🏏 Batsmen:<br>
               ➡ ${formatBatsman(data.batterone, data.batsmanonerun, data.batsmanoneball, data.batsmanonesr)}<br><br>
           🥎 Bowler:<br>
-              ➡ ${formatBowler(data.bowlerone, data.bowleroneover, data.bowleronerun, data.bowleronewickers, data.bowleroneeconomy)}<br><br>
+              ➡ ${formatBowler(data.bowlerone, data.bowleroneover, data.bowleronerun, data.bowleronewickers, data.bowleroneeconomy)}<br>
         `,
       },
     ];

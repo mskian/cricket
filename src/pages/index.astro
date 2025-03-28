@@ -34,13 +34,15 @@ const pageTitle = posts.length > 0 ? `${posts[0].title} | Live Cricket Score �
     <div class="container">
       {posts.length > 0 ? (
         posts.map((post) => (
-          <div class="card blog-card" data-id={post.id}>
+          <div class="card" data-id={post.id}>
             <div class="card-content">
-              <h2 class="title is-5 has-text-dark mt-5">{post.title}</h2>
+              <h2 class="title has-text-dark mt-5">{post.title}</h2>
               <div class="content post-content">
-                <p set:html={post.content}></p>
+                <div class="notification has-background-success-dark mt-5 mb-5">
+                  <p set:html={post.content}></p>
+                </div>
               </div>
-              <div class="notification has-background-info-dark mt-5 mb-5">⚡ Built with: {Astro.generator}<br />✏ updated at: {lastBuildTime}</div>
+              <div class="notification has-background-link-dark mt-5 mb-5">⚡ Built with: {Astro.generator}<br />✏ updated at: {lastBuildTime}</div>
             </div>
           </div>
         ))
