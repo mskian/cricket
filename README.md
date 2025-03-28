@@ -4,7 +4,13 @@
 
 🏏 Latest live cricket score and match updates 🥎  
 
-**Live Score: <https://mskian.github.io/cricket/>**  
+---
+
+**➡ Cricket API: <https://github.com/sanwebinfo/cricket-api>**
+
+**➡ Live Score: <https://mskian.github.io/cricket/>**  
+
+---
 
 ## LICENSE
 
