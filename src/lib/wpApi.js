@@ -1,7 +1,19 @@
-export async function fetchPosts(matchId = "115012") {
-
-  try {
+export async function getMatchId() {
   
+  try {
+    const response = await fetch("https://sanwebinfo.github.io/api-id/one.json");
+    if (!response.ok) throw new Error("Failed to fetch match ID");
+    const data = await response.json();
+    return data?.data_id || "12345";
+  } catch (error) {
+    console.error("Error fetching match ID");
+    return "12345";
+  }
+}
+
+export async function fetchPosts() {
+  try {
+    const matchId = await getMatchId();
     const apiUrl = process.env.MATCH_URL;
     const response = await fetch(`${apiUrl}/score?id=${matchId}`);
 
@@ -50,7 +62,7 @@ export async function fetchPosts(matchId = "115012") {
       },
     ];
   } catch (error) {
-    console.error("Error fetching match data:", error);
+    console.error("Error fetching match data");
     return [];
   }
 
