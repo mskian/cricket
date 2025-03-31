@@ -10,7 +10,7 @@
 
 **➡ Match One: <https://mskian.github.io/cricket/>**  
 
-**➡Match Two: <https://mskian.github.io/cricket/two/>**  
+**➡ Match Two: <https://mskian.github.io/cricket/two/>**  
 
 ---
 
