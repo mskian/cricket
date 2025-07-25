@@ -1,5 +1,4 @@
 ---
-import '../styles/global.css';
 const base = import.meta.env.BASE_URL || "/";
 ---
 
@@ -8,7 +7,7 @@ const base = import.meta.env.BASE_URL || "/";
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href={`${base}/favicon.ico`} type="image/x-icon">
   <link href={`${base}/192.png`} rel="icon" sizes="192x192" type="image/png">
   <link href={`${base}/180.png`} rel="apple-touch-icon">
@@ -16,17 +15,136 @@ const base = import.meta.env.BASE_URL || "/";
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
-  </head>
-  <body>
-
-    <section class="section">
-      <div class="container has-text-centered">
-        <h1 class="title has-text-dark">404 - Page Not Found</h1>
-        <br />
-        <p class="subtitle has-text-dark">Sorry, the page you are looking for does not exist.</p>
-        <a href="/cricket/" class="button is-warning has-text-dark">Go Home</a>
-      </div>
-    </section>
-
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3a0ca3;
+      --accent-color: #f72585;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --gray-color: #6c757d;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Rubik', sans-serif;
+      background-color: var(--light-color);
+      color: var(--dark-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+    
+    .error-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .error-content {
+      max-width: 600px;
+      width: 100%;
+    }
+    
+    .error-code {
+      font-size: 8rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+    
+    .error-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--secondary-color);
+    }
+    
+    .error-message {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      color: var(--gray-color);
+    }
+    
+    .home-button {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    
+    .home-button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .error-image {
+      max-width: 300px;
+      width: 100%;
+      height: auto;
+      margin: 0 auto 2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .error-code {
+        font-size: 6rem;
+      }
+      
+      .error-title {
+        font-size: 1.75rem;
+      }
+      
+      .error-message {
+        font-size: 1.1rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .error-code {
+        font-size: 4rem;
+      }
+      
+      .error-title {
+        font-size: 1.5rem;
+      }
+      
+      .error-message {
+        font-size: 1rem;
+      }
+      
+      .home-button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="error-container">
+    <div class="error-content">
+      <div class="error-code">404</div>
+      <h1 class="error-title">Oops! Page Not Found</h1>
+      <p class="error-message">The page you're looking for doesn't exist or has been moved. Please check the URL or return to the homepage.</p>
+      <a href="/cricket/" class="home-button">Go Back Home</a>
+    </div>
+  </div>
 </body>
 </html>

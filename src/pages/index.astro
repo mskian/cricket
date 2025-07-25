@@ -1,14 +1,13 @@
 ---
-
-import { fetchPosts } from '../lib/matchone.js';
+import { fetchPosts as fetchMatchOne } from '../lib/matchone.js';
+import { fetchPosts as fetchMatchTwo } from '../lib/matchtwo.js';
 import { lastBuildTime } from '../lib/buildInfo.js';
 import '../styles/global.css';
 
-const posts = await fetchPosts();
+const matchOnePosts = await fetchMatchOne();
+const matchTwoPosts = await fetchMatchTwo();
 const base = import.meta.env.BASE_URL || "/";
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const pageTitle = posts.length > 0 ? `${posts[0].title} | Live Cricket Score 🏏` : "Live Cricket Score 🏏";
-
 ---
 
 <!DOCTYPE html>
@@ -20,39 +19,242 @@ const pageTitle = posts.length > 0 ? `${posts[0].title} | Live Cricket Score �
   <link rel="shortcut icon" href={`${base}/favicon.ico`} type="image/x-icon">
   <link href={`${base}/192.png`} rel="icon" sizes="192x192" type="image/png">
   <link href={`${base}/180.png`} rel="apple-touch-icon">
-  <title>{pageTitle}</title>
-  <meta name="description" content="🏏 Latest live cricket score and match updates 🥎.">
+  <title>🏏 Free Live Cricket Score Updates</title>
+  <meta name="description" content="🏏 Latest live cricket score and Match updates 🥎.">
   <link rel="canonical" href={`${canonicalURL}/`} />
   <meta name="generator" content={Astro.generator} />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 
-  <section class="section">
-    <div class="container">
-      {posts.length > 0 ? (
-        posts.map((post) => (
-          <div class="card" data-id={post.id}>
-            <div class="card-content">
-              <h2 class="title has-text-dark mt-5">{post.title}</h2>
-              <div class="content post-content">
-                <div class="notification has-text-white has-background-success-dark mt-5 mb-5">
-                  <p set:html={post.content}></p>
+<header class="app-header">
+    <div class="app-title">
+      <span class="material-icons">sports_cricket</span>
+    </div>
+    <div class="header-actions">
+      <button class="refresh-btn" id="refresh-btn" title="Refresh scores">
+        <span class="material-icons">refresh</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="app-content">
+    <div id="score-one" class="page active">
+      {matchOnePosts.length > 0 ? (
+        matchOnePosts.map((post) => {
+          const contentParts = post.content.split('<br><br>');
+          const matchStatus = contentParts[0] || "Match status unavailable";
+          const currentScore = contentParts[1] || "No live score available";
+          const runRate = contentParts[2] || "Run rate: N/A";
+          const batsmen = contentParts[3] || "No batting data available";
+          const bowler = contentParts[4] || "No bowling data available";
+
+          return (
+            <div class="card">
+              <div class="card-header">{post.title}</div>
+              <div class="card-content">
+                <div class="score-card">
+                  <div class="score-title">Match Status</div>
+                  <div class="score-value">{matchStatus}</div>
                 </div>
+                
+                {currentScore !== "No live score available" && (
+                  <div class="score-card">
+                    <div class="score-title">Current Score</div>
+                    <div class="score-value">{currentScore}</div>
+                    <div class="score-detail">{runRate}</div>
+                  </div>
+                )}
+                
+                {!batsmen.includes("No data") && (
+                  <div class="score-card">
+                    <div class="score-title">Batting</div>
+                    <div class="score-detail">{batsmen}</div>
+                  </div>
+                )}
+                
+                {!bowler.includes("No data") && (
+                  <div class="score-card">
+                    <div class="score-title">Bowling</div>
+                    <div class="score-detail">{bowler}</div>
+                  </div>
+                )}
               </div>
-              <div class="notification has-text-white has-background-link-dark mt-5 mb-5">⚡ Built with: {Astro.generator}<br />✏ updated at: {lastBuildTime}</div>
+            </div>
+          );
+        })
+      ) : (
+        <div class="card">
+          <div class="card-content">
+            <div class="score-card">
+              <div class="score-title">Match Status</div>
+              <div class="score-value">No match data available</div>
+              <div class="score-detail">Please check back later</div>
             </div>
           </div>
-        ))
-      ) : (
-        <div class="notification is-danger has-text-centered">
-          No match data available.
         </div>
       )}
     </div>
-  </section>
+
+    <div id="score-two" class="page">
+      {matchTwoPosts.length > 0 ? (
+        matchTwoPosts.map((post) => {
+          const contentParts = post.content.split('<br><br>');
+          const matchStatus = contentParts[0] || "Match status unavailable";
+          const currentScore = contentParts[1] || "No live score available";
+          const runRate = contentParts[2] || "Run rate: N/A";
+          const batsmen = contentParts[3] || "No batting data available";
+          const bowler = contentParts[4] || "No bowling data available";
+
+          return (
+            <div class="card">
+              <div class="card-header">{post.title}</div>
+              <div class="card-content">
+                <div class="score-card">
+                  <div class="score-title">Match Status</div>
+                  <div class="score-value">{matchStatus}</div>
+                </div>
+                
+                {currentScore !== "No live score available" && (
+                  <div class="score-card">
+                    <div class="score-title">Current Score</div>
+                    <div class="score-value">{currentScore}</div>
+                    <div class="score-detail">{runRate}</div>
+                  </div>
+                )}
+                
+                {!batsmen.includes("No data") && (
+                  <div class="score-card">
+                    <div class="score-title">Batting</div>
+                    <div class="score-detail">{batsmen}</div>
+                  </div>
+                )}
+                
+                {!bowler.includes("No data") && (
+                  <div class="score-card">
+                    <div class="score-title">Bowling</div>
+                    <div class="score-detail">{bowler}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })
+      ) : (
+        <div class="card">
+          <div class="card-content">
+            <div class="score-card">
+              <div class="score-title">Match Status</div>
+              <div class="score-value">No match data available</div>
+              <div class="score-detail">Please check back later</div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+
+    <div id="settings" class="page">
+      <div class="card">
+        <div class="card-header">Settings</div>
+        <div class="settings-container">
+          <div class="setting-item">
+            <span>Dark Mode</span>
+            <label class="switch">
+              <input type="checkbox" id="dark-mode-toggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <span>Built Using:</span>
+            <span>{Astro.generator}</span>
+          </div>
+          <div class="setting-item">
+            <span>App Version:</span>
+            <span>0.0.1</span>
+          </div>
+          <div class="setting-item">
+            <span>Last Updated:</span>
+            <span>{lastBuildTime}</span>
+          </div>
+          <div class="badge-container">
+          <h2 class="badge-title">GitHub Actions Deployment Status</h2>
+        <div class="github-badge">
+            <a href="https://github.com/mskian/cricket/actions/workflows/deploy.yml" target="_blank" rel="nofollow noopener">
+                <img src="https://github.com/mskian/cricket/actions/workflows/deploy.yml/badge.svg" 
+                     alt="Deploy Website to GitHub Pages">
+            </a>
+        </div>
+        <p class="badge-description">
+            This badge shows the status of our automatic deployment workflow to GitHub Pages. 
+            Click on the badge to view the latest workflow runs and deployment status.
+        </p>
+        </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+ <nav class="bottom-nav">
+    <a href="#" class="nav-item active" data-page="score-one">
+      <span class="material-icons">home</span>
+      <span class="nav-label">Match 1</span>
+    </a>
+    <a href="#" class="nav-item" data-page="score-two">
+      <span class="material-icons">sports</span>
+      <span class="nav-label">Match 2</span>
+    </a>
+    <a href="#" class="nav-item" data-page="settings">
+      <span class="material-icons">settings</span>
+      <span class="nav-label">Settings</span>
+    </a>
+  </nav>
+
+  <script>
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        
+        this.classList.add('active');
+        
+        const pageId = this.getAttribute('data-page');
+        document.getElementById(pageId).classList.add('active');
+      });
+    });
+
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    if (localStorage.getItem('theme') === 'dark' || 
+        (!localStorage.getItem('theme') && prefersDarkScheme.matches)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      darkModeToggle.checked = true;
+    }
+    
+    darkModeToggle.addEventListener('change', function() {
+      if (this.checked) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    const refreshBtn = document.getElementById('refresh-btn');
+    
+    refreshBtn.addEventListener('click', function() {
+      this.classList.add('loading');
+      setTimeout(() => {
+        window.location.reload();
+      }, 600);
+    });
+  </script>
 
 </body>
 </html>

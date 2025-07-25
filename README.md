@@ -8,9 +8,7 @@
 
 **➡ Cricket API: <https://github.com/sanwebinfo/cricket-api>**  
 
-**➡ Match One: <https://mskian.github.io/cricket/>**  
-
-**➡ Match Two: <https://mskian.github.io/cricket/two/>**  
+**➡ Live Match URL: <https://mskian.github.io/cricket/>**  
 
 ---
 
