@@ -25,7 +25,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <meta name="generator" content={Astro.generator} />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
@@ -156,54 +156,77 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       )}
     </div>
 
-    <div id="settings" class="page">
-      <div class="card">
-        <div class="card-header">Settings</div>
-        <div class="settings-container">
-          <div class="setting-item">
-            <span>Dark Mode</span>
-            <label class="switch">
-              <input type="checkbox" id="dark-mode-toggle">
-              <span class="slider"></span>
-            </label>
+<div id="settings" class="page">
+  <div class="card">
+    <div class="card-header">Settings</div>
+    <div class="settings-container">
+      <div class="setting-item">
+        <span>Dark Mode</span>
+        <label class="switch">
+          <input type="checkbox" id="dark-mode-toggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="setting-item">
+        <span>Built Using:</span>
+        <span>{Astro.generator}</span>
+      </div>
+      <div class="setting-item">
+        <span>App Version:</span>
+        <span>0.0.2</span>
+      </div>
+      <div class="setting-item">
+        <span>Last Updated:</span>
+        <span>{lastBuildTime}</span>
+      </div>
+      <div class="setting-item">
+        <span>API Rate Limit:</span>
+        <span id="rate-limit-info">1 request per minute</span>
+      </div>
+      <div class="setting-item">
+        <span>Next API Request:</span>
+        <span id="next-request-time">Ready</span>
+      </div>
+      
+      <!-- Improved WebSocket Settings Section -->
+      <div class="setting-item">
+        <div class="setting-title">WebSocket Connection</div>
+        <div class="ws-controls">
+          <div class="ws-btn-row">
+            <button id="ws-connect-btn" class="ws-btn connect">Connect</button>
+            <button id="ws-disconnect-btn" class="ws-btn disconnect" disabled>Disconnect</button>
           </div>
-          <div class="setting-item">
-            <span>Built Using:</span>
-            <span>{Astro.generator}</span>
-          </div>
-          <div class="setting-item">
-            <span>App Version:</span>
-            <span>0.0.2</span>
-          </div>
-          <div class="setting-item">
-            <span>Last Updated:</span>
-            <span>{lastBuildTime}</span>
-          </div>
-          <div class="setting-item">
-            <span>API Rate Limit:</span>
-            <span id="rate-limit-info">1 request per minute</span>
-          </div>
-          <div class="setting-item">
-            <span>Next API Request:</span>
-            <span id="next-request-time">Ready</span>
-          </div>
-          <div class="badge-container">
-            <h2 class="badge-title">GitHub Actions Deployment Status</h2>
-            <div class="github-badge">
-              <a href="https://github.com/mskian/cricket/actions/workflows/deploy.yml" target="_blank" rel="nofollow noopener">
-                <img src="https://github.com/mskian/cricket/actions/workflows/deploy.yml/badge.svg" 
-                     alt="Deploy Website to GitHub Pages">
-              </a>
-            </div>
-            <p class="badge-description">
-              This badge shows the status of our automatic deployment workflow to GitHub Pages. 
-              Click on the badge to view the latest workflow runs and deployment status.
-            </p>
+          <div class="ws-status-row">
+            <span class="ws-status-label">Status:</span>
+            <span id="ws-status" class="ws-status disconnected">Disconnected</span>
           </div>
         </div>
       </div>
+      
+      <div class="setting-item">
+        <span>Auto Reload:</span>
+        <label class="switch">
+          <input type="checkbox" id="auto-reload-toggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      
+      <div class="badge-container">
+        <h2 class="badge-title">GitHub Actions Deployment Status</h2>
+        <div class="github-badge">
+          <a href="https://github.com/mskian/cricket/actions/workflows/deploy.yml" target="_blank" rel="nofollow noopener">
+            <img src="https://github.com/mskian/cricket/actions/workflows/deploy.yml/badge.svg" 
+                 alt="Deploy Website to GitHub Pages">
+          </a>
+        </div>
+        <p class="badge-description">
+          This badge shows the status of our automatic deployment workflow to GitHub Pages. 
+          Click on the badge to view the latest workflow runs and deployment status.
+        </p>
+      </div>
     </div>
   </div>
+</div>
 
   <nav class="bottom-nav">
     <a href="#" class="nav-item active" data-page="score-one">
@@ -221,305 +244,440 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   </nav>
 
 <script>
-    const refreshBtn = document.getElementById('refresh-btn');
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
-    const nextRequestTimeEl = document.getElementById('next-request-time');
+const refreshBtn = document.getElementById('refresh-btn');
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+const nextRequestTimeEl = document.getElementById('next-request-time');
     
-    const apiConfig = {
-      baseUrl: 'https://sanproxy.vercel.app/trigger',
-      rateLimit: {
-        maxRequests: 1,
-        timeWindow: 60000,
-        cooldownPeriod: 120000,
-        errorCooldown: 300000
-      },
-      retry: {
-        maxRetries: 2,
-        delay: 2000
-      },
-      updateInterval: 1000
+const apiConfig = {
+  baseUrl: 'https://sanproxy.vercel.app/trigger',
+  rateLimit: {
+    maxRequests: 1,
+    timeWindow: 60000,
+    cooldownPeriod: 120000,
+    errorCooldown: 300000
+  },
+  retry: {
+    maxRetries: 2,
+    delay: 2000
+  },
+  updateInterval: 1000
+};
+
+const appState = {
+  rateLimit: {
+    remaining: apiConfig.rateLimit.maxRequests,
+    resetTime: 0,
+    lastRequest: 0
+  },
+  retryCount: 0,
+  isDarkMode: localStorage.getItem('theme') === 'dark' || 
+             (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches),
+  countdownInterval: null,
+  ws: null,
+  isWsConnected: false,
+  autoReload: localStorage.getItem('autoReload') !== 'false',
+  reconnectAttempts: 0,
+  maxReconnectAttempts: 5,
+  reconnectDelay: 3000
+};
+
+function initializeWebSocket() {
+  if (appState.ws && (appState.ws.readyState === WebSocket.OPEN || appState.ws.readyState === WebSocket.CONNECTING)) {
+    return;
+  }
+
+  try {
+    appState.ws = new WebSocket('wss://sanpush.deno.dev/ws');
+    updateWsStatus('Connecting...', 'connecting');
+
+    appState.ws.onopen = () => {
+      appState.isWsConnected = true;
+      appState.reconnectAttempts = 0;
+      updateWsStatus('Connected', 'connected');
+      toggleWsButtons(true);
+      console.log('WebSocket connected');
+      showNotification('WebSocket connected successfully');
     };
 
-    const appState = {
-      rateLimit: {
-        remaining: apiConfig.rateLimit.maxRequests,
-        resetTime: 0,
-        lastRequest: 0
-      },
-      retryCount: 0,
-      isDarkMode: localStorage.getItem('theme') === 'dark' || 
-                 (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches),
-      countdownInterval: null
+appState.ws.onmessage = (event) => {
+  console.log('WebSocket message received:', event.data);
+  try {
+    const message = JSON.parse(event.data);
+    if (message.data !== undefined) {
+      showNotification(message.data);
+      if (message.data.toLowerCase() === 'reload') {
+        handleReload();
+      }
+    }
+  } catch (e) {
+    showNotification(event.data);
+    if (event.data.toLowerCase() === 'reload') {
+      handleReload();
+    }
+  }
+};
+
+function handleReload() {
+  if (appState.autoReload) {
+    showNotification('Reloading page for updates...', false);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500);
+  } else {
+    showNotification('Update available. Enable auto-reload in settings or refresh manually.', false);
+  }
+}
+
+    appState.ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+      updateWsStatus('Error', 'error');
+      showNotification('WebSocket connection error', true);
     };
 
-    function initializeUI() {
-      if (appState.isDarkMode) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        darkModeToggle.checked = true;
-      }
-      
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-          e.preventDefault();
-          document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-          document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-          this.classList.add('active');
-          document.getElementById(this.getAttribute('data-page')).classList.add('active');
-        });
-      });
-      
-      darkModeToggle.addEventListener('change', function() {
-        appState.isDarkMode = this.checked;
-        if (this.checked) {
-          document.documentElement.setAttribute('data-theme', 'dark');
-          localStorage.setItem('theme', 'dark');
-        } else {
-          document.documentElement.removeAttribute('data-theme');
-          localStorage.setItem('theme', 'light');
-        }
-      });
-      
-      const savedState = localStorage.getItem('rateLimitState');
-      if (savedState) {
-        try {
-          const parsed = JSON.parse(savedState);
-          if (parsed.resetTime > Date.now()) {
-            appState.rateLimit = parsed;
-            startCountdown();
-          }
-        } catch (e) {
-          console.error('Failed to parse rate limit state', e);
-        }
-      }
-      
-      refreshBtn.addEventListener('click', triggerUpdate);
-      updateRateLimitDisplay();
-    }
+    appState.ws.onclose = (event) => {
+      appState.isWsConnected = false;
+      updateWsStatus('Disconnected', 'disconnected');
+      toggleWsButtons(false);
+      console.log('WebSocket disconnected:', event.code, event.reason);
 
-    function startCountdown() {
-      stopCountdown();
-      
-      if (appState.rateLimit.resetTime > Date.now()) {
-        updateCountdownDisplay();
-        appState.countdownInterval = setInterval(updateCountdownDisplay, apiConfig.updateInterval);
+      if (event.code !== 1000 && appState.reconnectAttempts < appState.maxReconnectAttempts) {
+        appState.reconnectAttempts++;
+        const delay = appState.reconnectAttempts * appState.reconnectDelay;
+        showNotification(`WebSocket disconnected. Reconnecting in ${delay/1000} seconds...`, true);
+        setTimeout(() => {
+          initializeWebSocket();
+        }, delay);
       }
-    }
+    };
+  } catch (error) {
+    console.error('WebSocket initialization error:', error);
+    updateWsStatus('Connection Failed', 'error');
+    showNotification('Failed to connect to WebSocket server', true);
+  }
+}
 
-    function stopCountdown() {
-      if (appState.countdownInterval) {
-        clearInterval(appState.countdownInterval);
-        appState.countdownInterval = null;
-      }
-    }
+function updateWsStatus(text, status) {
+  const statusElement = document.getElementById('ws-status');
+  if (statusElement) {
+    statusElement.textContent = text;
+    statusElement.className = `ws-status ${status}`;
+  }
+  localStorage.setItem('wsStatus', status);
+}
 
-    function updateCountdownDisplay() {
-      const now = Date.now();
-      const timeLeft = Math.max(0, appState.rateLimit.resetTime - now);
-      
-      if (timeLeft <= 0) {
-        stopCountdown();
-        appState.rateLimit.remaining = apiConfig.rateLimit.maxRequests;
-        appState.rateLimit.resetTime = 0;
-        updateRateLimitDisplay();
-        return;
-      }
-      
-      const secondsLeft = Math.ceil(timeLeft / 1000);
-      nextRequestTimeEl.textContent = `in ${secondsLeft} seconds`;
-      
-      if (secondsLeft % 5 === 0) {
-        localStorage.setItem('rateLimitState', JSON.stringify(appState.rateLimit));
-      }
-    }
+function toggleWsButtons(isConnected) {
+  const connectBtn = document.getElementById('ws-connect-btn');
+  const disconnectBtn = document.getElementById('ws-disconnect-btn');
+  
+  if (connectBtn && disconnectBtn) {
+    connectBtn.disabled = isConnected;
+    disconnectBtn.disabled = !isConnected;
+  }
+}
 
-    function updateRateLimitDisplay() {
-      const rateLimitInfo = document.getElementById('rate-limit-info');
-      
-      if (appState.rateLimit.remaining <= 0) {
-        rateLimitInfo.textContent = 'Rate limit exceeded';
-        if (!appState.countdownInterval) {
-          startCountdown();
-        }
-      } else {
-        rateLimitInfo.textContent = `${appState.rateLimit.remaining} request${appState.rateLimit.remaining !== 1 ? 's' : ''} remaining`;
-        nextRequestTimeEl.textContent = 'Ready';
-      }
-    }
+function disconnectWebSocket() {
+  if (appState.ws) {
+    appState.ws.close(1000, 'User initiated disconnect');
+  }
+}
 
-    function showNotification(message, isError = false) {
-      const existingNotif = document.querySelector('.notification-center');
-      if (existingNotif) existingNotif.remove();
-      
-      const notification = document.createElement('div');
-      notification.className = `notification-center ${isError ? 'error' : 'success'}`;
-      notification.innerHTML = `
-        <div class="notification-content">
-          <span class="material-icons">${isError ? 'error' : 'check_circle'}</span>
-          <span>${message}</span>
-        </div>
-      `;
-      
-      document.body.appendChild(notification);
-      
-      const bottomNavHeight = document.querySelector('.bottom-nav').offsetHeight;
-      const centerY = window.innerHeight / 2 - bottomNavHeight / 2;
-      
-      notification.style.top = `${centerY}px`;
-      notification.style.transform = 'translate(-50%, -50%)';
-      
-      setTimeout(() => notification.classList.add('show'), 10);
-      
-      setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-      }, 3000);
-    }
+function setupWsControls() {
+  const connectBtn = document.getElementById('ws-connect-btn');
+  const disconnectBtn = document.getElementById('ws-disconnect-btn');
+  const autoReloadToggle = document.getElementById('auto-reload-toggle');
+  
+  if (connectBtn) {
+    connectBtn.addEventListener('click', initializeWebSocket);
+  }
+  
+  if (disconnectBtn) {
+    disconnectBtn.addEventListener('click', disconnectWebSocket);
+  }
+  
+  if (autoReloadToggle) {
+    autoReloadToggle.checked = appState.autoReload;
+    autoReloadToggle.addEventListener('change', function() {
+      appState.autoReload = this.checked;
+      localStorage.setItem('autoReload', this.checked);
+      showNotification(`Auto reload ${this.checked ? 'enabled' : 'disabled'}`);
+    });
+  }
+}
 
-    async function makeApiRequest() {
-      try {
-        const response = await fetch(apiConfig.baseUrl);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        if (typeof data !== 'object' || data === null) {
-          throw new Error('Invalid API response');
-        }
-        
-        return data;
-      } catch (error) {
-        console.error('API request failed:', error);
-        throw error;
-      }
-    }
+function startCountdown() {
+  stopCountdown();
+  
+  if (appState.rateLimit.resetTime > Date.now()) {
+    updateCountdownDisplay();
+    appState.countdownInterval = setInterval(updateCountdownDisplay, apiConfig.updateInterval);
+  }
+}
 
-    function updateRateLimitState(success) {
-      const now = Date.now();
-      
-      if (success) {
-        if (now > appState.rateLimit.resetTime) {
-          appState.rateLimit = {
-            remaining: apiConfig.rateLimit.maxRequests - 1,
-            resetTime: now + apiConfig.rateLimit.timeWindow,
-            lastRequest: now
-          };
-        } else {
-          appState.rateLimit.remaining--;
-          appState.rateLimit.lastRequest = now;
-        }
-      } else {
-        appState.rateLimit = {
-          remaining: 0,
-          resetTime: now + apiConfig.rateLimit.cooldownPeriod,
-          lastRequest: now
-        };
-      }
-      
-      localStorage.setItem('rateLimitState', JSON.stringify(appState.rateLimit));
-      updateRateLimitDisplay();
-    }
+function stopCountdown() {
+  if (appState.countdownInterval) {
+    clearInterval(appState.countdownInterval);
+    appState.countdownInterval = null;
+  }
+}
 
-    function handleRateLimitExceeded(data) {
-      const cooldownEnd = Date.now() + apiConfig.rateLimit.cooldownPeriod;
-      
+function updateCountdownDisplay() {
+  const now = Date.now();
+  const timeLeft = Math.max(0, appState.rateLimit.resetTime - now);
+  
+  if (timeLeft <= 0) {
+    stopCountdown();
+    appState.rateLimit.remaining = apiConfig.rateLimit.maxRequests;
+    appState.rateLimit.resetTime = 0;
+    updateRateLimitDisplay();
+    return;
+  }
+  
+  const secondsLeft = Math.ceil(timeLeft / 1000);
+  nextRequestTimeEl.textContent = `in ${secondsLeft} seconds`;
+  
+  if (secondsLeft % 5 === 0) {
+    localStorage.setItem('rateLimitState', JSON.stringify(appState.rateLimit));
+  }
+}
+
+function updateRateLimitDisplay() {
+  const rateLimitInfo = document.getElementById('rate-limit-info');
+  
+  if (appState.rateLimit.remaining <= 0) {
+    rateLimitInfo.textContent = 'Rate limit exceeded';
+    if (!appState.countdownInterval) {
+      startCountdown();
+    }
+  } else {
+    rateLimitInfo.textContent = `${appState.rateLimit.remaining} request${appState.rateLimit.remaining !== 1 ? 's' : ''} remaining`;
+    nextRequestTimeEl.textContent = 'Ready';
+  }
+}
+
+function showNotification(message, isError = false) {
+  const existingNotif = document.querySelector('.notification-center');
+  if (existingNotif) existingNotif.remove();
+  
+  const notification = document.createElement('div');
+  notification.className = `notification-center ${isError ? 'error' : 'success'}`;
+  notification.innerHTML = `
+    <div class="notification-content">
+      <span class="material-icons">${isError ? 'error' : 'check_circle'}</span>
+      <span>${message}</span>
+    </div>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  const bottomNavHeight = document.querySelector('.bottom-nav').offsetHeight;
+  const centerY = window.innerHeight / 2 - bottomNavHeight / 2;
+  
+  notification.style.top = `${centerY}px`;
+  notification.style.transform = 'translate(-50%, -50%)';
+  
+  setTimeout(() => notification.classList.add('show'), 10);
+  
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
+}
+
+async function makeApiRequest() {
+  try {
+    const response = await fetch(apiConfig.baseUrl);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (typeof data !== 'object' || data === null) {
+      throw new Error('Invalid API response');
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw error;
+  }
+}
+
+function updateRateLimitState(success) {
+  const now = Date.now();
+  
+  if (success) {
+    if (now > appState.rateLimit.resetTime) {
       appState.rateLimit = {
-        remaining: 0,
-        resetTime: cooldownEnd,
-        lastRequest: Date.now()
+        remaining: apiConfig.rateLimit.maxRequests - 1,
+        resetTime: now + apiConfig.rateLimit.timeWindow,
+        lastRequest: now
       };
-      
-      localStorage.setItem('rateLimitState', JSON.stringify(appState.rateLimit));
-      updateRateLimitDisplay();
-      
-      showNotification(data.message || 'Rate limit exceeded. Please try again later.', true);
-      
-      setTimeout(() => {
-        appState.rateLimit = {
-          remaining: apiConfig.rateLimit.maxRequests,
-          resetTime: 0,
-          lastRequest: 0
-        };
-        updateRateLimitDisplay();
-      }, apiConfig.rateLimit.cooldownPeriod);
+    } else {
+      appState.rateLimit.remaining--;
+      appState.rateLimit.lastRequest = now;
     }
+  } else {
+    appState.rateLimit = {
+      remaining: 0,
+      resetTime: now + apiConfig.rateLimit.cooldownPeriod,
+      lastRequest: now
+    };
+  }
+  
+  localStorage.setItem('rateLimitState', JSON.stringify(appState.rateLimit));
+  updateRateLimitDisplay();
+}
 
-    async function handleRequestError(error) {
-      console.error('Request error:', error);
-      
-      if (appState.retryCount < apiConfig.retry.maxRetries) {
-        appState.retryCount++;
-        showNotification(`Attempt ${appState.retryCount} of ${apiConfig.retry.maxRetries}. Retrying...`, true);
-        
-        await new Promise(resolve => setTimeout(resolve, apiConfig.retry.delay));
-        return triggerUpdate();
-      }
-      
-      const cooldownEnd = Date.now() + apiConfig.rateLimit.errorCooldown;
-      
-      appState.rateLimit = {
-        remaining: 0,
-        resetTime: cooldownEnd,
-        lastRequest: Date.now()
-      };
-      
-      localStorage.setItem('rateLimitState', JSON.stringify(appState.rateLimit));
-      updateRateLimitDisplay();
-      
-      showNotification('Service temporarily unavailable. Please try again later.', true);
+function handleRateLimitExceeded(data) {
+  const cooldownEnd = Date.now() + apiConfig.rateLimit.cooldownPeriod;
+  
+  appState.rateLimit = {
+    remaining: 0,
+    resetTime: cooldownEnd,
+    lastRequest: Date.now()
+  };
+  
+  localStorage.setItem('rateLimitState', JSON.stringify(appState.rateLimit));
+  updateRateLimitDisplay();
+  
+  showNotification(data.message || 'Rate limit exceeded. Please try again later.', true);
+  
+  setTimeout(() => {
+    appState.rateLimit = {
+      remaining: apiConfig.rateLimit.maxRequests,
+      resetTime: 0,
+      lastRequest: 0
+    };
+    updateRateLimitDisplay();
+  }, apiConfig.rateLimit.cooldownPeriod);
+}
+
+async function handleRequestError(error) {
+  console.error('Request error:', error);
+  
+  if (appState.retryCount < apiConfig.retry.maxRetries) {
+    appState.retryCount++;
+    showNotification(`Attempt ${appState.retryCount} of ${apiConfig.retry.maxRetries}. Retrying...`, true);
+    
+    await new Promise(resolve => setTimeout(resolve, apiConfig.retry.delay));
+    return triggerUpdate();
+  }
+  
+  const cooldownEnd = Date.now() + apiConfig.rateLimit.errorCooldown;
+  
+  appState.rateLimit = {
+    remaining: 0,
+    resetTime: cooldownEnd,
+    lastRequest: Date.now()
+  };
+  
+  localStorage.setItem('rateLimitState', JSON.stringify(appState.rateLimit));
+  updateRateLimitDisplay();
+  
+  showNotification('Service temporarily unavailable. Please try again later.', true);
+  appState.retryCount = 0;
+  
+  setTimeout(() => {
+    appState.rateLimit = {
+      remaining: apiConfig.rateLimit.maxRequests,
+      resetTime: 0,
+      lastRequest: 0
+    };
+    updateRateLimitDisplay();
+  }, apiConfig.rateLimit.errorCooldown);
+}
+
+async function triggerUpdate() {
+  const now = Date.now();
+  
+  if (now < appState.rateLimit.resetTime && appState.rateLimit.remaining <= 0) {
+    const timeLeft = Math.ceil((appState.rateLimit.resetTime - now) / 1000);
+    showNotification(`Please wait ${timeLeft} seconds before trying again.`, true);
+    return;
+  }
+  
+  if (now - appState.rateLimit.lastRequest < 1000) {
+    showNotification('Please wait a moment between requests', true);
+    return;
+  }
+  
+  refreshBtn.disabled = true;
+  refreshBtn.classList.add('loading');
+  
+  try {
+    const data = await makeApiRequest();
+    
+    if (data.success) {
+      showNotification('Scores updated successfully!');
       appState.retryCount = 0;
+      updateRateLimitState(true);
       
-      setTimeout(() => {
-        appState.rateLimit = {
-          remaining: apiConfig.rateLimit.maxRequests,
-          resetTime: 0,
-          lastRequest: 0
-        };
-        updateRateLimitDisplay();
-      }, apiConfig.rateLimit.errorCooldown);
+      refreshBtn.classList.add('success');
+      setTimeout(() => refreshBtn.classList.remove('success'), 1000);
+    } else if (data.statusCode === 429) {
+      handleRateLimitExceeded(data);
     }
+  } catch (error) {
+    await handleRequestError(error);
+  } finally {
+    refreshBtn.disabled = false;
+    refreshBtn.classList.remove('loading');
+  }
+}
 
-    async function triggerUpdate() {
-      const now = Date.now();
-      
-      if (now < appState.rateLimit.resetTime && appState.rateLimit.remaining <= 0) {
-        const timeLeft = Math.ceil((appState.rateLimit.resetTime - now) / 1000);
-        showNotification(`Please wait ${timeLeft} seconds before trying again.`, true);
-        return;
-      }
-      
-      if (now - appState.rateLimit.lastRequest < 1000) {
-        showNotification('Please wait a moment between requests', true);
-        return;
-      }
-      
-      refreshBtn.disabled = true;
-      refreshBtn.classList.add('loading');
-      
-      try {
-        const data = await makeApiRequest();
-        
-        if (data.success) {
-          showNotification('Scores updated successfully!');
-          appState.retryCount = 0;
-          updateRateLimitState(true);
-          
-          refreshBtn.classList.add('success');
-          setTimeout(() => refreshBtn.classList.remove('success'), 1000);
-        } else if (data.statusCode === 429) {
-          handleRateLimitExceeded(data);
-        }
-      } catch (error) {
-        await handleRequestError(error);
-      } finally {
-        refreshBtn.disabled = false;
-        refreshBtn.classList.remove('loading');
-      }
+function initializeUI() {
+  if (appState.isDarkMode) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    darkModeToggle.checked = true;
+  }
+  
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById(this.getAttribute('data-page')).classList.add('active');
+    });
+  });
+  
+  darkModeToggle.addEventListener('change', function() {
+    appState.isDarkMode = this.checked;
+    if (this.checked) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'light');
     }
+  });
+  
+  const savedState = localStorage.getItem('rateLimitState');
+  if (savedState) {
+    try {
+      const parsed = JSON.parse(savedState);
+      if (parsed.resetTime > Date.now()) {
+        appState.rateLimit = parsed;
+        startCountdown();
+      }
+    } catch (e) {
+      console.error('Failed to parse rate limit state', e);
+    }
+  }
+  
+  refreshBtn.addEventListener('click', triggerUpdate);
+  updateRateLimitDisplay();
 
-    initializeUI();
+  if (localStorage.getItem('wsStatus') === 'connected') {
+    initializeWebSocket();
+  }
+  
+  setupWsControls();
+}
+
+initializeUI();
 </script>
 
 </body>

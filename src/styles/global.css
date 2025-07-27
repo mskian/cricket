@@ -35,7 +35,7 @@
     }
 
     body {
-      font-family: "Rubik", sans-serif;
+      font-family: 'Open Sans', sans-serif;
       background-color: var(--background);
       color: var(--on-background);
       font-weight: 600;
@@ -89,7 +89,7 @@
     }
 
     .app-title {
-      font-family: "Rubik", sans-serif;
+      font-family: 'Open Sans', sans-serif;
       font-size: 1.25rem;
       font-weight: 500;
       display: flex;
@@ -121,7 +121,7 @@
       flex-direction: column;
       align-items: center;
       color: var(--on-surface);
-      font-family: "Rubik", sans-serif;
+      font-family: 'Open Sans', sans-serif;
       text-decoration: none;
       padding: 8px;
       border-radius: 4px;
@@ -174,21 +174,21 @@
     }
 
     .score-title {
-      font-family: "Rubik", sans-serif;
+      font-family: 'Open Sans', sans-serif;
       font-size: 1rem;
       margin-bottom: 8px;
       color: var(--primary-color);
     }
 
     .score-value {
-      font-family: "Rubik", sans-serif;
+      font-family: 'Open Sans', sans-serif;
       font-size: 1.5rem;
       font-weight: 500;
       margin-bottom: 8px;
     }
 
     .score-detail {
-      font-family: "Rubik", sans-serif;
+      font-family: 'Open Sans', sans-serif;
       font-size: 0.875rem;
       color: var(--on-surface);
       opacity: 0.8;
@@ -200,7 +200,7 @@
     }
 
     .setting-item {
-      font-family: "Rubik", sans-serif;
+      font-family: 'Open Sans', sans-serif;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -389,4 +389,79 @@
       .notification-center .material-icons {
         font-size: 20px;
       }
+    }
+    .ws-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .ws-btn-row {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .ws-btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.9em;
+      font-weight: 600;
+      flex: 1;i
+    }
+    
+    .ws-btn.connect {
+      background-color: #4CAF50;
+      color: white;
+    }
+    
+    .ws-btn.disconnect {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .ws-btn:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    
+    .ws-status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .ws-status-label {
+      font-weight: bold;
+    }
+    
+    .ws-status {
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 0.9em;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: bold;
+    }
+    
+    .ws-status.connected {
+      background-color: #4CAF50;
+      color: white;
+    }
+    
+    .ws-status.disconnected {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .ws-status.connecting {
+      background-color: #FFC107;
+      color: black;
+    }
+    
+    .ws-status.error {
+      background-color: #9E9E9E;
+      color: white;
     }
