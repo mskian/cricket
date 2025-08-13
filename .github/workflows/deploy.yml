@@ -15,7 +15,7 @@ jobs:
       MATCH_URL: ${{ secrets.MATCH_URL }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           show-progress: false
       - name: Install, build, and upload site
