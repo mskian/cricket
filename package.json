@@ -11,6 +11,6 @@
   "dependencies": {
     "astro": "5.13.5",
     "dotenv": "^17.2.2",
-    "luxon": "^3.7.1"
+    "luxon": "^3.7.2"
   }
 }
