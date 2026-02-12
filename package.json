@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "astro": "5.17.2",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.2.4",
     "luxon": "^3.7.2"
   }
 }
