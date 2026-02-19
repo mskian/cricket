@@ -9,7 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "5.17.2",
+    "astro": "5.17.3",
     "dotenv": "^17.2.4",
     "luxon": "^3.7.2"
   }
