@@ -19,7 +19,7 @@ jobs:
         with:
           show-progress: false
       - name: Install, build, and upload site
-        uses: withastro/action@v4
+        uses: withastro/action@v5
         with:
             package-manager: pnpm@latest
 
